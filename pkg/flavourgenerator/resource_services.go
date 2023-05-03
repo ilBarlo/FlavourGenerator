@@ -86,5 +86,5 @@ func getNodeResourceMetrics(nodeMetrics *metricsv1beta1.NodeMetrics, node *corev
 }
 
 func getNodeInfo(node *corev1.Node, metrics *ResourceMetrics) *NodeInfo {
-	return fromNodeInfo(node.Name, string(node.UID), node.Status.NodeInfo.Architecture, node.Status.NodeInfo.OperatingSystem, *metrics)
+	return fromNodeInfo(string(node.UID), node.Name, node.Status.NodeInfo.Architecture, node.Status.NodeInfo.OperatingSystem, *metrics)
 }

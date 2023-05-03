@@ -18,12 +18,12 @@ func main() {
 	cl, err := flavGenerator.GetKClient(ctx)
 	utilruntime.Must(err)
 
-	str, err := flavGenerator.GetNodesResources(ctx, cl)
+	nodes, err := flavGenerator.GetNodesResources(ctx, cl)
 	utilruntime.Must(err)
 
-	for _, node := range *str {
-		fmt.Println(node.ResourceMetrics)
+	for _, node := range *nodes {
+		flavGenerator.SendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
+		fmt.Printf("Message sent from node %s\n", node.Name)
 	}
 
-	// klog.Fatalf("unable to start the server: %s", manager.SetupRouterAndServeHTTP(ctx, cl))
 }

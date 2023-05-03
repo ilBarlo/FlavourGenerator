@@ -4,7 +4,7 @@ import "fmt"
 
 // Info of the node
 type NodeInfo struct {
-	uid             string          /* UID - Unique Identifier: used in case we have two nodes from different clusters with the same name */
+	UID             string          `json:"uid"`
 	Name            string          `json:"name"`
 	Architecture    string          `json:"architecture"`
 	OperatingSystem string          `json:"os"`
@@ -21,7 +21,7 @@ type ResourceMetrics struct {
 
 func fromNodeInfo(uid, name, arch, os string, metrics ResourceMetrics) *NodeInfo {
 	return &NodeInfo{
-		uid:             uid,
+		UID:             uid,
 		Name:            name,
 		Architecture:    arch,
 		OperatingSystem: os,
