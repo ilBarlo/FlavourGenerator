@@ -1,6 +1,11 @@
 package flavourgenerator
 
-import "fmt"
+import (
+	"fmt"
+
+	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+)
 
 // Info of the node
 type NodeInfo struct {
@@ -19,6 +24,13 @@ type ResourceMetrics struct {
 	MemoryAvailable string `json:"availableMemory"`
 }
 
+// PodReconciler reconciles a Pod object
+type PodReconciler struct {
+	client.Client
+	Scheme *runtime.Scheme
+}
+
+// Create from the params a new NodeInfo Struct
 func fromNodeInfo(uid, name, arch, os string, metrics ResourceMetrics) *NodeInfo {
 	return &NodeInfo{
 		UID:             uid,
@@ -29,6 +41,7 @@ func fromNodeInfo(uid, name, arch, os string, metrics ResourceMetrics) *NodeInfo
 	}
 }
 
+// Create from the params a new ResourceMetrics Struct
 func fromResourceMetrics(cpuTotal int64, cpuUsed int64, memoryTotal int64, memoryUsed int64) *ResourceMetrics {
 	return &ResourceMetrics{
 		CPUTotal:        fmt.Sprintf("%.2f", float64(cpuTotal)/1000),

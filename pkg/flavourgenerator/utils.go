@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// marshallJson converts in json a NodeInfo struct
 func marshallJson(node *NodeInfo) ([]byte, error) {
 	jsonBody, err := json.Marshal(node)
 	if err != nil {

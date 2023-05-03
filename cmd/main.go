@@ -18,12 +18,9 @@ func main() {
 	cl, err := flavGenerator.GetKClient(ctx)
 	utilruntime.Must(err)
 
-	nodes, err := flavGenerator.GetNodesResources(ctx, cl)
-	utilruntime.Must(err)
+	flavGenerator.StartController(cl)
 
-	for _, node := range *nodes {
-		flavGenerator.SendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-		fmt.Printf("Message sent from node %s\n", node.Name)
-	}
+	fmt.Println("Started reconciler")
+	select {}
 
 }

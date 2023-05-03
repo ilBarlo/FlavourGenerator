@@ -6,7 +6,6 @@ import (
 	discoveryv1alpha1 "github.com/liqotech/liqo/apis/discovery/v1alpha1"
 	sharingv1alpha1 "github.com/liqotech/liqo/apis/sharing/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
-
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/klog/v2"
 	metricsv1beta1 "k8s.io/metrics/pkg/apis/metrics/v1beta1"
@@ -39,6 +38,7 @@ func GetKClient(ctx context.Context) (client.Client, error) {
 	return cl, nil
 }
 
+// GetNodesResources retrieves the metrics from all the worker nodes in the cluster
 func GetNodesResources(ctx context.Context, cl client.Client) (*[]NodeInfo, error) {
 	// Get a list of nodes
 	nodes := &corev1.NodeList{}
@@ -77,6 +77,7 @@ func GetNodesResources(ctx context.Context, cl client.Client) (*[]NodeInfo, erro
 	return &nodesInfo, nil
 }
 
+// getNodeResourceMetrics gets a ResourceMetrics struct
 func getNodeResourceMetrics(nodeMetrics *metricsv1beta1.NodeMetrics, node *corev1.Node) *ResourceMetrics {
 	cpuTotal := node.Status.Allocatable.Cpu().MilliValue()
 	cpuUsed := nodeMetrics.Usage.Cpu().MilliValue()
@@ -85,6 +86,7 @@ func getNodeResourceMetrics(nodeMetrics *metricsv1beta1.NodeMetrics, node *corev
 	return fromResourceMetrics(cpuTotal, cpuUsed, memoryTotal, memoryUsed)
 }
 
+// getNodeInfo gets a NodeInfo struct
 func getNodeInfo(node *corev1.Node, metrics *ResourceMetrics) *NodeInfo {
 	return fromNodeInfo(string(node.UID), node.Name, node.Status.NodeInfo.Architecture, node.Status.NodeInfo.OperatingSystem, *metrics)
 }
