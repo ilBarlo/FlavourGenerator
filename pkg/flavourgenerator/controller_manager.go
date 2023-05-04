@@ -58,7 +58,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 	for _, node := range *nodes {
 		sendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-		fmt.Printf("Message sent from node %s\n", node.Name)
+		fmt.Printf("Metrics sent from node %s\n", node.Name)
 	}
 	return ctrl.Result{}, nil
 }
