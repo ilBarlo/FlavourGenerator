@@ -4,7 +4,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// Function to create RabbitMQ Channel
+// createChannel creates a RabbitMQ Channel
 func createChannel(url string) (*amqp.Connection, *amqp.Channel, error) {
 	// Connection to the server RabbitMQ
 	conn, err := amqp.Dial(url)
@@ -19,7 +19,7 @@ func createChannel(url string) (*amqp.Connection, *amqp.Channel, error) {
 	return conn, ch, nil
 }
 
-// Function to declare a queue on a RabbitMQ Channel
+// declareQueue declares a queue on a RabbitMQ Channel
 func declareQueue(ch *amqp.Channel, queueName string) error {
 
 	_, err := ch.QueueDeclare(
@@ -36,7 +36,7 @@ func declareQueue(ch *amqp.Channel, queueName string) error {
 	return nil
 }
 
-// Function to publish a message on the channel
+// publishMessage publish a message on the channel
 func publishMessage(ch *amqp.Channel, queueName string, message []byte) error {
 
 	err := ch.Publish(

@@ -2,15 +2,14 @@ package flavourgenerator
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 )
 
-// marshallJson converts in json a NodeInfo struct
+// marshallJson converts a NodeInfo struct to JSON
 func marshallJson(node *NodeInfo) ([]byte, error) {
 	jsonBody, err := json.Marshal(node)
 	if err != nil {
-		log.Fatalf("Errore durante la conversione in JSON: %v", err)
-		return nil, err
+		return nil, fmt.Errorf("error converting to JSON: %v", err)
 	}
 	return jsonBody, nil
 }

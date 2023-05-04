@@ -7,7 +7,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// Info of the node
+// NodeInfo represents a node and its resources
 type NodeInfo struct {
 	UID             string          `json:"uid"`
 	Name            string          `json:"name"`
@@ -16,7 +16,7 @@ type NodeInfo struct {
 	ResourceMetrics ResourceMetrics `json:"resources"`
 }
 
-// Metrics of the resource of a certain node
+// ResourceMetrics represents resources of a certain node
 type ResourceMetrics struct {
 	CPUTotal        string `json:"totalCPU"`
 	CPUAvailable    string `json:"availableCPU"`
@@ -30,7 +30,7 @@ type PodReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// Create from the params a new NodeInfo Struct
+// fromNodeInfo creates from params a new NodeInfo Struct
 func fromNodeInfo(uid, name, arch, os string, metrics ResourceMetrics) *NodeInfo {
 	return &NodeInfo{
 		UID:             uid,
@@ -41,7 +41,7 @@ func fromNodeInfo(uid, name, arch, os string, metrics ResourceMetrics) *NodeInfo
 	}
 }
 
-// Create from the params a new ResourceMetrics Struct
+// fromResourceMetrics creates from params a new ResourceMetrics Struct
 func fromResourceMetrics(cpuTotal int64, cpuUsed int64, memoryTotal int64, memoryUsed int64) *ResourceMetrics {
 	return &ResourceMetrics{
 		CPUTotal:        fmt.Sprintf("%.2f", float64(cpuTotal)/1000),

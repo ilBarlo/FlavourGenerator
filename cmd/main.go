@@ -7,11 +7,9 @@ import (
 
 	flavGenerator "github.com/ilbarlo/flavourGenerator/pkg/flavourgenerator"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/klog/v2"
 )
 
 func main() {
-	klog.InitFlags(nil)
 	flag.Parse()
 	ctx := context.Background()
 

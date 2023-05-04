@@ -3,9 +3,8 @@ package flavourgenerator
 import (
 	"context"
 
-	discoveryv1alpha1 "github.com/liqotech/liqo/apis/discovery/v1alpha1"
-	sharingv1alpha1 "github.com/liqotech/liqo/apis/sharing/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/klog/v2"
 	metricsv1beta1 "k8s.io/metrics/pkg/apis/metrics/v1beta1"
@@ -17,9 +16,9 @@ var (
 	scheme = runtime.NewScheme()
 )
 
+const workerLabelKey = "node-role.kubernetes.io/worker"
+
 func init() {
-	_ = discoveryv1alpha1.AddToScheme(scheme)
-	_ = sharingv1alpha1.AddToScheme(scheme)
 	_ = metricsv1beta1.AddToScheme(scheme)
 	_ = corev1.AddToScheme(scheme)
 }
@@ -40,9 +39,14 @@ func GetKClient(ctx context.Context) (client.Client, error) {
 
 // GetNodesResources retrieves the metrics from all the worker nodes in the cluster
 func GetNodesResources(ctx context.Context, cl client.Client) (*[]NodeInfo, error) {
+	// Set a label selector to filter worker nodes
+	labelSelector := labels.Set{workerLabelKey: ""}.AsSelector()
+
 	// Get a list of nodes
 	nodes := &corev1.NodeList{}
-	err := cl.List(ctx, nodes)
+	err := cl.List(ctx, nodes, &client.ListOptions{
+		LabelSelector: labelSelector,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -60,11 +64,6 @@ func GetNodesResources(ctx context.Context, cl client.Client) (*[]NodeInfo, erro
 		for _, metrics := range nodesMetrics.Items {
 			if node.Name != metrics.Name {
 				// So that we can select just the nodes that we want
-				continue
-			}
-
-			// Select just the workers (not the control-plane nodes)
-			if _, ok := node.Labels["node-role.kubernetes.io/control-plane"]; ok {
 				continue
 			}
 
