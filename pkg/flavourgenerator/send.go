@@ -1,30 +1,25 @@
 package flavourgenerator
 
+import "log"
+
 // sendMessage sends a message on the queue
-func sendMessage(flavour Flavour, queueName string, url string) error {
+func sendMessage(flavour Flavour, subject string, url string) error {
 
 	message, err := marshallJson(&flavour)
 	if err != nil {
 		return err
 	}
-	// Channel creation
-	conn, ch, err := createChannel(url)
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-	defer ch.Close()
 
-	// Code declaration
-	err = declareQueue(ch, queueName)
+	// Connect to NATS server
+	nc, err := connectNATS(url)
 	if err != nil {
-		return err
+		log.Fatalf("Error connecting to NATS: %v", err)
 	}
+	defer nc.Close()
 
-	// Publish Message
-	err = publishMessage(ch, queueName, message)
-	if err != nil {
-		return err
+	// Publish a message to a subject
+	if err := publishMsg(nc, subject, message); err != nil {
+		log.Fatalf("Error publishing message: %v", err)
 	}
 
 	return nil

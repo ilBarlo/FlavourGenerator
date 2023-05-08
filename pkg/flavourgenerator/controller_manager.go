@@ -54,7 +54,7 @@ func StartController(cl client.Client) {
 				for _, node := range *nodes {
 					flavours := splitResources(node)
 					for _, flavour := range flavours {
-						sendMessage(flavour, "metrics", "amqp://guest:guest@localhost:5672/")
+						sendMessage(flavour, "flavours", natsURL)
 						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
 					}
 				}
@@ -69,7 +69,7 @@ func StartController(cl client.Client) {
 				for _, node := range *nodes {
 					flavours := splitResources(node)
 					for _, flavour := range flavours {
-						sendMessage(flavour, "metrics", "amqp://guest:guest@localhost:5672/")
+						sendMessage(flavour, "flavours", natsURL)
 						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
 					}
 				}
@@ -84,7 +84,7 @@ func StartController(cl client.Client) {
 				for _, node := range *nodes {
 					flavours := splitResources(node)
 					for _, flavour := range flavours {
-						sendMessage(flavour, "metrics", "amqp://guest:guest@localhost:5672/")
+						sendMessage(flavour, "flavours", natsURL)
 						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
 					}
 				}
