@@ -1,9 +1,9 @@
 package flavourgenerator
 
 // sendMessage sends a message on the queue
-func sendMessage(nodeInfo NodeInfo, queueName string, url string) error {
+func sendMessage(flavour Flavour, queueName string, url string) error {
 
-	message, err := marshallJson(&nodeInfo)
+	message, err := marshallJson(&flavour)
 	if err != nil {
 		return err
 	}

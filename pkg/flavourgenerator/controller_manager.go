@@ -52,8 +52,11 @@ func StartController(cl client.Client) {
 				}
 
 				for _, node := range *nodes {
-					sendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-					fmt.Printf("Metrics sent from node %s\n", node.Name)
+					flavours := splitResources(node)
+					for _, flavour := range flavours {
+						sendMessage(flavour, "metrics", "amqp://guest:guest@localhost:5672/")
+						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
+					}
 				}
 			},
 			DeleteFunc: func(obj interface{}) {
@@ -64,8 +67,11 @@ func StartController(cl client.Client) {
 				}
 
 				for _, node := range *nodes {
-					sendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-					fmt.Printf("Metrics sent from node %s\n", node.Name)
+					flavours := splitResources(node)
+					for _, flavour := range flavours {
+						sendMessage(flavour, "metrics", "amqp://guest:guest@localhost:5672/")
+						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
+					}
 				}
 			},
 			UpdateFunc: func(oldObj, newObj interface{}) {
@@ -76,8 +82,11 @@ func StartController(cl client.Client) {
 				}
 
 				for _, node := range *nodes {
-					sendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-					fmt.Printf("Metrics sent from node %s\n", node.Name)
+					flavours := splitResources(node)
+					for _, flavour := range flavours {
+						sendMessage(flavour, "metrics", "amqp://guest:guest@localhost:5672/")
+						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
+					}
 				}
 			},
 		},
