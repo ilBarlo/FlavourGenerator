@@ -14,6 +14,7 @@ import (
 
 var (
 	scheme = runtime.NewScheme()
+	uids   []string
 )
 
 const workerLabelKey = "node-role.kubernetes.io/worker"
@@ -70,6 +71,7 @@ func GetNodesResources(ctx context.Context, cl client.Client) (*[]NodeInfo, erro
 			metricsStruct := getNodeResourceMetrics(&metrics, &node)
 			nodeInfo := getNodeInfo(&node, metricsStruct)
 			nodesInfo = append(nodesInfo, *nodeInfo)
+			uids = append(uids, string(node.UID))
 		}
 	}
 

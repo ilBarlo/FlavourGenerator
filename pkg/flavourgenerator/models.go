@@ -7,12 +7,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const (
-	Small  Plan = "Small: 11"
-	Medium Plan = "Medium: 33"
-	Large  Plan = "Large: 66"
-)
-
 // NodeInfo represents a node and its resources
 type NodeInfo struct {
 	UID             string          `json:"uid"`
@@ -38,17 +32,22 @@ type PodReconciler struct {
 
 // Flavour represents a subset of a node's resources
 type Flavour struct {
-	UID             string `json:"uid"`
-	Name            string `json:"name"`
-	Architecture    string `json:"architecture"`
-	OperatingSystem string `json:"os"`
-	CPUOffer        string `json:"cpuOffer"`
-	MemoryOffer     string `json:"memoryOffer"`
-	PodsOffer       []Plan `json:"podsOffer"`
+	NodeUID         string     `json:"nodeUid"`
+	UID             string     `json:"uid"`
+	Name            string     `json:"name"`
+	Architecture    string     `json:"architecture"`
+	OperatingSystem string     `json:"os"`
+	CPUOffer        string     `json:"cpuOffer"`
+	MemoryOffer     string     `json:"memoryOffer"`
+	PodsOffer       []PodsPlan `json:"podsOffer"`
 }
 
-// Plan represents a specific Plan for each flavour depending the number of pods
-type Plan string
+// PodsPlan represents a plan for which is possibile to have a specific amount of available pods
+type PodsPlan struct {
+	Name      string `json:"name"`
+	Available bool   `json:"available"`
+	Pods      int64  `json:"availablePods"`
+}
 
 // splitResources produces different Flavours (60% - 30% - 10% of available resources)
 func splitResources(node NodeInfo) []Flavour {
@@ -58,31 +57,46 @@ func splitResources(node NodeInfo) []Flavour {
 
 	flavours := []Flavour{
 		{
-			UID:             node.UID + "flavour-1",
-			Name:            node.Name + "flavour-small",
+			NodeUID:         node.UID,
+			UID:             node.UID + "-flavour-1",
+			Name:            node.Name + "-flavour-small",
 			Architecture:    node.Architecture,
 			OperatingSystem: node.OperatingSystem,
 			CPUOffer:        fmt.Sprintf("%.0f", float64(AvailCPU)*0.6),
 			MemoryOffer:     fmt.Sprintf("%.0fGi", float64(AvailMemory)*0.6),
-			PodsOffer:       []Plan{Small, Medium, Large},
+			PodsOffer: []PodsPlan{
+				{Name: "Small", Available: true, Pods: 11},
+				{Name: "Medium", Available: true, Pods: 33},
+				{Name: "Large", Available: true, Pods: 66},
+			},
 		},
 		{
-			UID:             node.UID + "flavour-2",
-			Name:            node.Name + "flavour-medium",
+			NodeUID:         node.UID,
+			UID:             node.UID + "-flavour-2",
+			Name:            node.Name + "-flavour-medium",
 			Architecture:    node.Architecture,
 			OperatingSystem: node.OperatingSystem,
 			CPUOffer:        fmt.Sprintf("%.0f", float64(AvailCPU)*0.3),
 			MemoryOffer:     fmt.Sprintf("%.0fGi", float64(AvailMemory)*0.3),
-			PodsOffer:       []Plan{Small, Medium, Large},
+			PodsOffer: []PodsPlan{
+				{Name: "Small", Available: true, Pods: 11},
+				{Name: "Medium", Available: true, Pods: 33},
+				{Name: "Large", Available: true, Pods: 66},
+			},
 		},
 		{
-			UID:             node.UID + "flavour-3",
-			Name:            node.Name + "flavour-large",
+			NodeUID:         node.UID,
+			UID:             node.UID + "-flavour-3",
+			Name:            node.Name + "-flavour-large",
 			Architecture:    node.Architecture,
 			OperatingSystem: node.OperatingSystem,
 			CPUOffer:        fmt.Sprintf("%.0f", float64(AvailCPU)*0.1),
 			MemoryOffer:     fmt.Sprintf("%.0fGi", float64(AvailMemory)*0.1),
-			PodsOffer:       []Plan{Small, Medium, Large},
+			PodsOffer: []PodsPlan{
+				{Name: "Small", Available: true, Pods: 11},
+				{Name: "Medium", Available: true, Pods: 33},
+				{Name: "Large", Available: true, Pods: 66},
+			},
 		},
 	}
 	return flavours

@@ -27,8 +27,6 @@ func StartController(cl client.Client) {
 		log.Fatalf("Failed to create Kubernetes client: %v", err)
 	}
 
-	//labelSelector := labels.Set{workerLabelKey: ""}
-
 	// Create a new informer for pods
 	podInformer := informers.NewSharedInformerFactoryWithOptions(
 		kubeClient, time.Minute,

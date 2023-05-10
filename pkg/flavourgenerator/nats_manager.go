@@ -13,6 +13,7 @@ func connectNATS(url string) (*nats.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return nc, nil
 }
 
@@ -28,5 +29,6 @@ func publishMsg(nc *nats.Conn, subject string, message []byte) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

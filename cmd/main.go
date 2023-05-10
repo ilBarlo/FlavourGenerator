@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 
 	flavGenerator "github.com/ilbarlo/flavourGenerator/pkg/flavourgenerator"
@@ -10,7 +9,6 @@ import (
 )
 
 func main() {
-	flag.Parse()
 	ctx := context.Background()
 
 	cl, err := flavGenerator.GetKClient(ctx)
@@ -18,6 +16,6 @@ func main() {
 
 	flavGenerator.StartController(cl)
 
-	fmt.Println("Started reconciler")
+	fmt.Println("Started controller")
 	select {}
 }
