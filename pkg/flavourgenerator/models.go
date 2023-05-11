@@ -2,6 +2,7 @@ package flavourgenerator
 
 import (
 	"fmt"
+	"strconv"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -49,56 +50,48 @@ type PodsPlan struct {
 	Pods      int64  `json:"availablePods"`
 }
 
-// splitResources produces different Flavours (60% - 30% - 10% of available resources)
+// splitResources produces different Flavours with intelligent resource allocation
 func splitResources(node NodeInfo) []Flavour {
-
 	AvailCPU := node.ResourceMetrics.CPUAvailable
 	AvailMemory := node.ResourceMetrics.MemoryAvailable
 
-	flavours := []Flavour{
-		{
+	// Define initial values for resource allocation
+	cpuAllocation := 1.0
+	memoryAllocation := 1.0
+
+	flavours := []Flavour{}
+	for AvailCPU > cpuAllocation && AvailMemory > memoryAllocation {
+
+		// Create the flavour
+		flavour := Flavour{
 			NodeUID:         node.UID,
-			UID:             node.UID + "-flavour-1",
-			Name:            node.Name + "-flavour-small",
+			UID:             node.UID + "-flavour-" + strconv.Itoa(len(flavours)+1),
+			Name:            node.Name + "-flavour-" + strconv.Itoa(len(flavours)+1),
 			Architecture:    node.Architecture,
 			OperatingSystem: node.OperatingSystem,
-			CPUOffer:        fmt.Sprintf("%.2f", float64(AvailCPU)*0.6),
-			MemoryOffer:     fmt.Sprintf("%.2fGi", float64(AvailMemory)*0.6),
+			CPUOffer:        fmt.Sprintf("%.2f", cpuAllocation),
+			MemoryOffer:     fmt.Sprintf("%.2fGi", memoryAllocation),
 			PodsOffer: []PodsPlan{
 				{Name: "Small", Available: true, Pods: 11},
 				{Name: "Medium", Available: true, Pods: 33},
 				{Name: "Large", Available: true, Pods: 66},
 			},
-		},
-		{
-			NodeUID:         node.UID,
-			UID:             node.UID + "-flavour-2",
-			Name:            node.Name + "-flavour-medium",
-			Architecture:    node.Architecture,
-			OperatingSystem: node.OperatingSystem,
-			CPUOffer:        fmt.Sprintf("%.2f", float64(AvailCPU)*0.3),
-			MemoryOffer:     fmt.Sprintf("%.2fGi", float64(AvailMemory)*0.3),
-			PodsOffer: []PodsPlan{
-				{Name: "Small", Available: true, Pods: 11},
-				{Name: "Medium", Available: true, Pods: 33},
-				{Name: "Large", Available: true, Pods: 66},
-			},
-		},
-		{
-			NodeUID:         node.UID,
-			UID:             node.UID + "-flavour-3",
-			Name:            node.Name + "-flavour-large",
-			Architecture:    node.Architecture,
-			OperatingSystem: node.OperatingSystem,
-			CPUOffer:        fmt.Sprintf("%.2f", float64(AvailCPU)*0.1),
-			MemoryOffer:     fmt.Sprintf("%.2fGi", float64(AvailMemory)*0.1),
-			PodsOffer: []PodsPlan{
-				{Name: "Small", Available: true, Pods: 11},
-				{Name: "Medium", Available: true, Pods: 33},
-				{Name: "Large", Available: true, Pods: 66},
-			},
-		},
+		}
+		flavours = append(flavours, flavour)
+
+		// Increase the resource allocation for the next flavour
+		cpuAllocation += float64(len(flavours) + 1)
+		memoryAllocation += float64(len(flavours) + 1)
+
+		// Check if the allocation exceeds the available resources
+		if cpuAllocation > AvailCPU {
+			cpuAllocation = AvailCPU
+		}
+		if memoryAllocation > AvailMemory {
+			memoryAllocation = AvailMemory
+		}
 	}
+
 	return flavours
 }
 
