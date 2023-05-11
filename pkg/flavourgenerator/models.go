@@ -62,8 +62,8 @@ func splitResources(node NodeInfo) []Flavour {
 			Name:            node.Name + "-flavour-small",
 			Architecture:    node.Architecture,
 			OperatingSystem: node.OperatingSystem,
-			CPUOffer:        fmt.Sprintf("%.0f", float64(AvailCPU)*0.6),
-			MemoryOffer:     fmt.Sprintf("%.0fGi", float64(AvailMemory)*0.6),
+			CPUOffer:        fmt.Sprintf("%.2f", float64(AvailCPU)*0.6),
+			MemoryOffer:     fmt.Sprintf("%.2fGi", float64(AvailMemory)*0.6),
 			PodsOffer: []PodsPlan{
 				{Name: "Small", Available: true, Pods: 11},
 				{Name: "Medium", Available: true, Pods: 33},
@@ -76,8 +76,8 @@ func splitResources(node NodeInfo) []Flavour {
 			Name:            node.Name + "-flavour-medium",
 			Architecture:    node.Architecture,
 			OperatingSystem: node.OperatingSystem,
-			CPUOffer:        fmt.Sprintf("%.0f", float64(AvailCPU)*0.3),
-			MemoryOffer:     fmt.Sprintf("%.0fGi", float64(AvailMemory)*0.3),
+			CPUOffer:        fmt.Sprintf("%.2f", float64(AvailCPU)*0.3),
+			MemoryOffer:     fmt.Sprintf("%.2fGi", float64(AvailMemory)*0.3),
 			PodsOffer: []PodsPlan{
 				{Name: "Small", Available: true, Pods: 11},
 				{Name: "Medium", Available: true, Pods: 33},
@@ -90,8 +90,8 @@ func splitResources(node NodeInfo) []Flavour {
 			Name:            node.Name + "-flavour-large",
 			Architecture:    node.Architecture,
 			OperatingSystem: node.OperatingSystem,
-			CPUOffer:        fmt.Sprintf("%.0f", float64(AvailCPU)*0.1),
-			MemoryOffer:     fmt.Sprintf("%.0fGi", float64(AvailMemory)*0.1),
+			CPUOffer:        fmt.Sprintf("%.2f", float64(AvailCPU)*0.1),
+			MemoryOffer:     fmt.Sprintf("%.2fGi", float64(AvailMemory)*0.1),
 			PodsOffer: []PodsPlan{
 				{Name: "Small", Available: true, Pods: 11},
 				{Name: "Medium", Available: true, Pods: 33},
