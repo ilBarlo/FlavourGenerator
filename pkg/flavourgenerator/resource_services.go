@@ -54,7 +54,9 @@ func GetNodesResources(ctx context.Context, cl client.Client) (*[]NodeInfo, erro
 
 	// Get a list of nodes metrics
 	nodesMetrics := &metricsv1beta1.NodeMetricsList{}
-	err = cl.List(ctx, nodesMetrics)
+	err = cl.List(ctx, nodesMetrics, &client.ListOptions{
+		LabelSelector: labelSelector,
+	})
 	if err != nil {
 		return nil, err
 	}

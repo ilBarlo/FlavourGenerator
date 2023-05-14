@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	flavGenerator "github.com/ilbarlo/flavourGenerator/pkg/flavourgenerator"
+	flavGenerator "github.com/ilbarlo/flavourGeneratorProducer/pkg/flavourgenerator"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 )
 

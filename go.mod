@@ -1,4 +1,4 @@
-module github.com/ilbarlo/flavourGenerator
+module github.com/ilbarlo/flavourGeneratorProducer
 
 go 1.20
 
