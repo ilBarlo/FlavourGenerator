@@ -16,6 +16,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
+// StartController starts the controller
 func StartController(cl client.Client) {
 	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{})
 	if err != nil {
@@ -26,8 +27,6 @@ func StartController(cl client.Client) {
 	if err != nil {
 		log.Fatalf("Failed to create Kubernetes client: %v", err)
 	}
-
-	//labelSelector := labels.Set{workerLabelKey: ""}
 
 	// Create a new informer for pods
 	podInformer := informers.NewSharedInformerFactoryWithOptions(
@@ -52,8 +51,11 @@ func StartController(cl client.Client) {
 				}
 
 				for _, node := range *nodes {
-					sendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-					fmt.Printf("Metrics sent from node %s\n", node.Name)
+					flavours := splitResources(node)
+					for _, flavour := range flavours {
+						sendMessage(flavour, "flavours", natsURL)
+						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
+					}
 				}
 			},
 			DeleteFunc: func(obj interface{}) {
@@ -64,8 +66,11 @@ func StartController(cl client.Client) {
 				}
 
 				for _, node := range *nodes {
-					sendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-					fmt.Printf("Metrics sent from node %s\n", node.Name)
+					flavours := splitResources(node)
+					for _, flavour := range flavours {
+						sendMessage(flavour, "flavours", natsURL)
+						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
+					}
 				}
 			},
 			UpdateFunc: func(oldObj, newObj interface{}) {
@@ -76,8 +81,11 @@ func StartController(cl client.Client) {
 				}
 
 				for _, node := range *nodes {
-					sendMessage(node, "metrics", "amqp://guest:guest@localhost:5672/")
-					fmt.Printf("Metrics sent from node %s\n", node.Name)
+					flavours := splitResources(node)
+					for _, flavour := range flavours {
+						sendMessage(flavour, "flavours", natsURL)
+						fmt.Printf("Flavour sent from node %s\n", flavour.Name)
+					}
 				}
 			},
 		},

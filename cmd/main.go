@@ -2,15 +2,13 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 
-	flavGenerator "github.com/ilbarlo/flavourGenerator/pkg/flavourgenerator"
+	flavGenerator "github.com/ilbarlo/flavourGeneratorProducer/pkg/flavourgenerator"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 )
 
 func main() {
-	flag.Parse()
 	ctx := context.Background()
 
 	cl, err := flavGenerator.GetKClient(ctx)
@@ -18,6 +16,6 @@ func main() {
 
 	flavGenerator.StartController(cl)
 
-	fmt.Println("Started reconciler")
+	fmt.Println("Started controller")
 	select {}
 }
